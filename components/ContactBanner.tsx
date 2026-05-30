@@ -9,13 +9,13 @@ interface ContactBannerProps {
 export default function ContactBanner({ showCta = true }: ContactBannerProps) {
   return (
     <section className="bg-gray-50">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid gap-10 lg:grid-cols-2">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
           <div>
-            <h2 className="text-2xl font-bold text-brand-dark">
+            <h2 className="text-xl font-bold text-brand-dark sm:text-2xl">
               Opening Hours
             </h2>
-            <div className="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-card">
+            <div className="mt-4 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-card sm:mt-6">
               <table className="w-full text-sm">
                 <tbody>
                   {OPENING_HOURS.map((row, i) => (
@@ -23,10 +23,12 @@ export default function ContactBanner({ showCta = true }: ContactBannerProps) {
                       key={row.days}
                       className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}
                     >
-                      <td className="px-5 py-3.5 font-semibold text-brand-dark">
+                      <td className="px-4 py-3 font-semibold text-brand-dark sm:px-5 sm:py-3.5">
                         {row.days}
                       </td>
-                      <td className="px-5 py-3.5 text-gray-600">{row.hours}</td>
+                      <td className="px-4 py-3 text-gray-600 sm:px-5 sm:py-3.5">
+                        {row.hours}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -35,10 +37,10 @@ export default function ContactBanner({ showCta = true }: ContactBannerProps) {
           </div>
 
           <div>
-            <h2 className="text-2xl font-bold text-brand-dark">
+            <h2 className="text-xl font-bold text-brand-dark sm:text-2xl">
               Get in Touch
             </h2>
-            <ul className="mt-6 space-y-4">
+            <ul className="mt-4 space-y-3 sm:mt-6 sm:space-y-4">
               <li className="flex items-start gap-3 rounded-xl bg-white p-4 shadow-card">
                 <MapPin
                   className="mt-0.5 h-5 w-5 shrink-0 text-brand-orange"
@@ -67,7 +69,7 @@ export default function ContactBanner({ showCta = true }: ContactBannerProps) {
                 />
                 <a
                   href={CONTACT_INFO.emailHref}
-                  className="text-sm font-semibold text-brand-dark hover:text-brand-orange focus-ring rounded"
+                  className="break-all text-sm font-semibold text-brand-dark hover:text-brand-orange focus-ring rounded"
                 >
                   {CONTACT_INFO.email}
                 </a>
@@ -86,7 +88,7 @@ export default function ContactBanner({ showCta = true }: ContactBannerProps) {
             {showCta && (
               <Link
                 href="/contact"
-                className="mt-6 inline-flex rounded-lg bg-brand-orange px-6 py-3 text-sm font-bold text-white transition-all hover:bg-orange-600 hover:shadow-lg focus-ring"
+                className="mt-6 inline-flex min-h-[44px] w-full items-center justify-center rounded-lg bg-brand-orange px-6 py-3 text-sm font-bold text-white transition-all hover:bg-orange-600 hover:shadow-lg focus-ring sm:w-auto"
               >
                 Send a Request
               </Link>

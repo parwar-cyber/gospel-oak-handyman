@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Phone, Mail } from "lucide-react";
 import { CONTACT_INFO, AREAS_SERVED } from "@/lib/data";
+import SocialLinks from "@/components/SocialLinks";
 
 const FOOTER_LINKS = [
   { href: "/", label: "Home" },
@@ -13,16 +14,16 @@ const FOOTER_LINKS = [
 export default function Footer() {
   return (
     <footer className="bg-brand-dark text-white">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid gap-10 md:grid-cols-3">
-          <div>
+      <div className="mx-auto max-w-7xl px-4 py-12 pb-16 sm:px-6 sm:pb-12 lg:px-8">
+        <div className="grid gap-10 text-center md:grid-cols-3 md:text-left">
+          <div className="flex flex-col items-center md:items-start">
             <div className="mb-4 flex items-center gap-3">
               <Image
                 src="/logo.jpg"
                 alt="Gospel Oak Handyman logo"
                 width={56}
                 height={56}
-                className="h-14 w-14 rounded-lg object-contain bg-white p-1"
+                className="h-14 w-14 rounded-lg bg-white object-contain p-1"
               />
               <div>
                 <p className="text-lg font-bold text-brand-orange">
@@ -31,7 +32,7 @@ export default function Footer() {
                 <p className="text-lg font-bold">Handyman</p>
               </div>
             </div>
-            <p className="text-sm text-gray-400">
+            <p className="max-w-xs text-sm text-gray-400">
               Trusted home repairs &amp; maintenance in Camden &amp; Gospel Oak.
             </p>
           </div>
@@ -59,14 +60,14 @@ export default function Footer() {
               Contact
             </h3>
             <ul className="space-y-3 text-sm text-gray-300">
-              <li className="flex items-start gap-2">
+              <li className="flex items-start justify-center gap-2 md:justify-start">
                 <MapPin
                   className="mt-0.5 h-4 w-4 shrink-0 text-brand-orange"
                   aria-hidden="true"
                 />
                 {CONTACT_INFO.address}
               </li>
-              <li className="flex items-center gap-2">
+              <li className="flex items-center justify-center gap-2 md:justify-start">
                 <Phone
                   className="h-4 w-4 shrink-0 text-brand-orange"
                   aria-hidden="true"
@@ -78,14 +79,14 @@ export default function Footer() {
                   {CONTACT_INFO.phone}
                 </a>
               </li>
-              <li className="flex items-center gap-2">
+              <li className="flex items-center justify-center gap-2 md:justify-start">
                 <Mail
                   className="h-4 w-4 shrink-0 text-brand-orange"
                   aria-hidden="true"
                 />
                 <a
                   href={CONTACT_INFO.emailHref}
-                  className="hover:text-white focus-ring rounded"
+                  className="break-all hover:text-white focus-ring rounded"
                 >
                   {CONTACT_INFO.email}
                 </a>
@@ -94,9 +95,14 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 border-t border-gray-800 pt-6 text-center text-xs text-gray-500">
-          <p>&copy; 2025 Gospel Oak Handyman. All rights reserved.</p>
-          <p className="mt-1">Areas served: {AREAS_SERVED}</p>
+        <div className="mt-10 border-t border-gray-800 pt-6">
+          <div className="flex flex-col items-center gap-4">
+            <SocialLinks variant="footer" showLabel />
+            <div className="text-center text-xs text-gray-500">
+              <p>&copy; 2025 Gospel Oak Handyman. All rights reserved.</p>
+              <p className="mt-1">Areas served: {AREAS_SERVED}</p>
+            </div>
+          </div>
         </div>
       </div>
     </footer>

@@ -34,17 +34,17 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
+    <div className="flex min-h-screen items-center justify-center px-4 py-8">
       <div className="w-full max-w-md">
-        <div className="mb-8 text-center">
+        <div className="mb-6 text-center sm:mb-8">
           <Image
             src="/logo.jpg"
             alt="Gospel Oak Handyman logo"
             width={80}
             height={80}
-            className="mx-auto mb-4 h-20 w-20 rounded-xl object-contain"
+            className="mx-auto mb-4 h-16 w-16 rounded-xl object-contain sm:h-20 sm:w-20"
           />
-          <h1 className="text-2xl font-extrabold text-brand-dark">
+          <h1 className="text-xl font-extrabold text-brand-dark sm:text-2xl">
             Admin Login
           </h1>
           <p className="mt-2 text-sm text-gray-500">
@@ -54,7 +54,7 @@ export default function AdminLoginPage() {
 
         <form
           onSubmit={handleSubmit}
-          className="rounded-2xl border border-gray-200 bg-white p-8 shadow-card"
+          className="rounded-2xl border border-gray-200 bg-white p-5 shadow-card sm:p-8"
         >
           <div className="space-y-5">
             <div>
@@ -70,7 +70,7 @@ export default function AdminLoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm focus:border-brand-orange focus:outline-none focus:ring-2 focus:ring-brand-orange/20"
+                className="w-full min-h-[44px] rounded-lg border border-gray-200 px-4 py-2.5 text-sm focus:border-brand-orange focus:outline-none focus:ring-2 focus:ring-brand-orange/20"
                 placeholder="admin@example.com"
               />
             </div>
@@ -88,13 +88,16 @@ export default function AdminLoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm focus:border-brand-orange focus:outline-none focus:ring-2 focus:ring-brand-orange/20"
+                className="w-full min-h-[44px] rounded-lg border border-gray-200 px-4 py-2.5 text-sm focus:border-brand-orange focus:outline-none focus:ring-2 focus:ring-brand-orange/20"
                 placeholder="••••••••"
               />
             </div>
 
             {error && (
-              <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
+              <p
+                className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700"
+                role="alert"
+              >
                 {error}
               </p>
             )}
@@ -102,7 +105,7 @@ export default function AdminLoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-brand-orange px-6 py-3 text-sm font-bold text-white transition-all hover:bg-orange-600 disabled:opacity-60 focus-ring"
+              className="w-full min-h-[44px] rounded-lg bg-brand-orange px-6 py-3 text-sm font-bold text-white transition-all hover:bg-orange-600 disabled:opacity-60 focus-ring"
             >
               {loading ? "Signing in..." : "Sign In"}
             </button>

@@ -99,7 +99,7 @@ export default function ContactForm() {
           required
           value={form.name}
           onChange={handleChange}
-          className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm transition-colors focus:border-brand-orange focus:outline-none focus:ring-2 focus:ring-brand-orange/20"
+          className="w-full min-h-[44px] rounded-lg border border-gray-200 px-4 py-3 text-sm transition-colors focus:border-brand-orange focus:outline-none focus:ring-2 focus:ring-brand-orange/20"
           placeholder="Your full name"
         />
       </div>
@@ -115,7 +115,7 @@ export default function ContactForm() {
           required
           value={form.email}
           onChange={handleChange}
-          className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm transition-colors focus:border-brand-orange focus:outline-none focus:ring-2 focus:ring-brand-orange/20"
+          className="w-full min-h-[44px] rounded-lg border border-gray-200 px-4 py-3 text-sm transition-colors focus:border-brand-orange focus:outline-none focus:ring-2 focus:ring-brand-orange/20"
           placeholder="you@example.com"
         />
       </div>
@@ -130,7 +130,7 @@ export default function ContactForm() {
           name="phone"
           value={form.phone}
           onChange={handleChange}
-          className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm transition-colors focus:border-brand-orange focus:outline-none focus:ring-2 focus:ring-brand-orange/20"
+          className="w-full min-h-[44px] rounded-lg border border-gray-200 px-4 py-3 text-sm transition-colors focus:border-brand-orange focus:outline-none focus:ring-2 focus:ring-brand-orange/20"
           placeholder="+44 7XXX XXXXXX"
         />
       </div>
@@ -145,7 +145,7 @@ export default function ContactForm() {
           required
           value={form.service}
           onChange={handleChange}
-          className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm transition-colors focus:border-brand-orange focus:outline-none focus:ring-2 focus:ring-brand-orange/20"
+          className="w-full min-h-[44px] rounded-lg border border-gray-200 px-4 py-3 text-sm transition-colors focus:border-brand-orange focus:outline-none focus:ring-2 focus:ring-brand-orange/20"
         >
           <option value="">Select a service</option>
           {SERVICE_OPTIONS.map((option) => (
@@ -168,7 +168,7 @@ export default function ContactForm() {
           rows={5}
           value={form.message}
           onChange={handleChange}
-          className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm transition-colors focus:border-brand-orange focus:outline-none focus:ring-2 focus:ring-brand-orange/20"
+          className="w-full min-h-[44px] rounded-lg border border-gray-200 px-4 py-3 text-sm transition-colors focus:border-brand-orange focus:outline-none focus:ring-2 focus:ring-brand-orange/20"
           placeholder="Describe the job you need help with..."
         />
       </div>
@@ -182,7 +182,7 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={status === "loading"}
-        className="w-full rounded-lg bg-brand-orange px-6 py-3.5 text-base font-bold text-white transition-all hover:bg-orange-600 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60 focus-ring"
+        className="w-full min-h-[44px] rounded-lg bg-brand-orange px-6 py-3.5 text-base font-bold text-white transition-all hover:bg-orange-600 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60 focus-ring"
       >
         {status === "loading" ? "Sending..." : "Send Request"}
       </button>

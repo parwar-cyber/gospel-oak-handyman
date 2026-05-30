@@ -29,7 +29,7 @@ export default function RequestsTable({
 
   if (requests.length === 0) {
     return (
-      <div className="rounded-xl border border-gray-200 bg-white p-12 text-center">
+      <div className="rounded-xl border border-gray-200 bg-white p-8 text-center sm:p-12">
         <p className="text-gray-500">No requests found.</p>
       </div>
     );
@@ -37,7 +37,39 @@ export default function RequestsTable({
 
   return (
     <div>
-      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-card">
+      {/* Mobile card list */}
+      <div className="space-y-3 md:hidden">
+        {requests.map((request) => (
+          <div
+            key={request.id}
+            className="rounded-xl border border-gray-200 bg-white p-4 shadow-card"
+          >
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <p className="truncate font-semibold text-brand-dark">
+                  {request.name}
+                </p>
+                <p className="truncate text-sm text-gray-600">
+                  {request.service}
+                </p>
+              </div>
+              <StatusBadge status={request.status as RequestStatus} />
+            </div>
+            <p className="mt-2 text-xs text-gray-500">
+              {formatDate(request.created_at)}
+            </p>
+            <Link
+              href={`/admin/requests/${request.id}`}
+              className="mt-3 flex min-h-[44px] w-full items-center justify-center rounded-lg bg-brand-orange text-sm font-semibold text-white transition-colors hover:bg-orange-600 focus-ring"
+            >
+              View
+            </Link>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop table */}
+      <div className="hidden overflow-hidden rounded-xl border border-gray-200 bg-white shadow-card md:block">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -93,12 +125,12 @@ export default function RequestsTable({
       </div>
 
       {totalPages > 1 && (
-        <div className="mt-4 flex items-center justify-center gap-2">
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
           <button
             type="button"
             onClick={() => onPageChange(currentPage - 1)}
             disabled={currentPage <= 1}
-            className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-semibold disabled:opacity-40 focus-ring"
+            className="min-h-[44px] rounded-lg border border-gray-200 px-4 py-2 text-sm font-semibold disabled:opacity-40 focus-ring"
           >
             Previous
           </button>
@@ -109,7 +141,7 @@ export default function RequestsTable({
             type="button"
             onClick={() => onPageChange(currentPage + 1)}
             disabled={currentPage >= totalPages}
-            className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-semibold disabled:opacity-40 focus-ring"
+            className="min-h-[44px] rounded-lg border border-gray-200 px-4 py-2 text-sm font-semibold disabled:opacity-40 focus-ring"
           >
             Next
           </button>
