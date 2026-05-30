@@ -12,6 +12,8 @@ export const metadata: Metadata = {
     "Professional handyman services in Camden & Gospel Oak, NW3. 15+ years experience. General repairs, maintenance, painting, plumbing & more.",
 };
 
+export const revalidate = 0;
+
 const WHY_CHOOSE = [
   { stat: "15+ Years", label: "Experience you can trust" },
   { stat: "5.0 ★", label: "Perfect Google rating" },

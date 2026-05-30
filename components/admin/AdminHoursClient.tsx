@@ -1,23 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import AdminShell from "@/components/admin/AdminShell";
 import type { OpeningHour } from "@/lib/hours";
 
 interface AdminHoursClientProps {
-  initialHours: OpeningHour[];
   userEmail: string;
 }
 
-export default function AdminHoursClient({
-  initialHours,
-  userEmail,
-}: AdminHoursClientProps) {
-  const [hours, setHours] = useState<OpeningHour[]>(initialHours);
+export default function AdminHoursClient({ userEmail }: AdminHoursClientProps) {
+  const [hours, setHours] = useState<OpeningHour[]>([]);
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchHours = async () => {
+      const { data, error: fetchError } = await supabase
+        .from("opening_hours")
+        .select("*")
+        .order("sort_order", { ascending: true });
+
+      if (fetchError) {
+        console.error("Hours fetch error:", fetchError);
+        setError("Failed to load opening hours.");
+      } else if (data) {
+        setHours(data as OpeningHour[]);
+      }
+
+      setLoading(false);
+    };
+
+    fetchHours();
+  }, []);
 
   const updateRow = (
     id: number,
@@ -52,34 +69,42 @@ export default function AdminHoursClient({
     setSuccess(false);
 
     try {
-      for (const row of hours) {
-        const { error: updateError } = await supabase
-          .from("opening_hours")
-          .update({
-            day: row.day,
-            open_time: row.is_closed ? null : row.open_time,
-            close_time: row.is_closed ? null : row.close_time,
-            is_closed: row.is_closed,
-            sort_order: row.sort_order,
-          })
-          .eq("id", row.id);
+      const updates = hours.map((row) => ({
+        id: row.id,
+        day: row.day,
+        open_time: row.is_closed ? null : row.open_time,
+        close_time: row.is_closed ? null : row.close_time,
+        is_closed: row.is_closed,
+        sort_order: row.sort_order,
+      }));
 
-        if (updateError) {
-          console.error("Hours update error:", updateError);
-          setError("Failed to save opening hours. Please try again.");
-          setSaving(false);
-          return;
-        }
+      const { error: saveError } = await supabase
+        .from("opening_hours")
+        .upsert(updates, { onConflict: "id" });
+
+      if (saveError) {
+        console.error("Save error:", saveError);
+        setError("Failed to save changes. Please try again.");
+        return;
       }
 
       setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
-      console.error("Unexpected save error:", err);
-      setError("Failed to save opening hours. Please try again.");
+      console.error(err);
+      setError("Unexpected error saving hours.");
     } finally {
       setSaving(false);
     }
   };
+
+  if (loading) {
+    return (
+      <AdminShell userEmail={userEmail}>
+        <p className="text-gray-500">Loading opening hours...</p>
+      </AdminShell>
+    );
+  }
 
   return (
     <AdminShell userEmail={userEmail}>
@@ -157,7 +182,10 @@ export default function AdminHoursClient({
         </div>
 
         {error && (
-          <p className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
+          <p
+            className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700"
+            role="alert"
+          >
             {error}
           </p>
         )}
@@ -174,7 +202,7 @@ export default function AdminHoursClient({
         <button
           type="button"
           onClick={handleSave}
-          disabled={saving}
+          disabled={saving || hours.length === 0}
           className="mt-6 min-h-[44px] w-full rounded-lg bg-brand-orange px-6 py-3 text-sm font-bold text-white transition-all hover:bg-orange-600 disabled:opacity-60 focus-ring sm:w-auto"
         >
           {saving ? "Saving..." : "Save Changes"}

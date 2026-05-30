@@ -12,6 +12,8 @@ export const metadata: Metadata = {
     "Contact Gospel Oak Handyman for a free quote. Call +44 7784 010417 or send a request online. Serving Camden, Gospel Oak, NW3 & NW5.",
 };
 
+export const revalidate = 0;
+
 export default function ContactPage() {
   return (
     <>

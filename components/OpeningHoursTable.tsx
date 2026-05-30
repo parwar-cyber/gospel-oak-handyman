@@ -2,12 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import {
-  type OpeningHour,
-  formatHoursRange,
-  getTodayName,
-  DEFAULT_OPENING_HOURS,
-} from "@/lib/hours";
+import { type OpeningHour, formatHoursRange, getTodayName } from "@/lib/hours";
 
 interface OpeningHoursTableProps {
   variant?: "table" | "list";
@@ -23,31 +18,39 @@ export default function OpeningHoursTable({
   const today = getTodayName();
 
   useEffect(() => {
-    async function fetchHours() {
+    const fetchHours = async () => {
       const { data, error } = await supabase
         .from("opening_hours")
         .select("*")
         .order("sort_order", { ascending: true });
 
-      if (!error && data && data.length > 0) {
-        setHours(data as OpeningHour[]);
-      } else {
-        setHours(
-          DEFAULT_OPENING_HOURS.map((row, index) => ({
-            id: index + 1,
-            ...row,
-          }))
-        );
+      if (error) {
+        console.error("Opening hours fetch error:", error);
       }
+
+      if (!error && data) {
+        setHours(data as OpeningHour[]);
+      }
+
       setLoading(false);
-    }
+    };
 
     fetchHours();
   }, []);
 
   if (loading) {
     return (
-      <p className={`text-sm text-gray-500 ${className}`}>Loading hours...</p>
+      <div className={`animate-pulse text-sm text-gray-400 ${className}`}>
+        Loading hours...
+      </div>
+    );
+  }
+
+  if (hours.length === 0) {
+    return (
+      <p className={`text-sm text-gray-500 ${className}`}>
+        Opening hours unavailable.
+      </p>
     );
   }
 
@@ -64,15 +67,11 @@ export default function OpeningHoursTable({
               }`}
             >
               <span
-                className={`font-medium ${isToday ? "text-brand-dark" : "text-gray-700"}`}
+                className={`font-medium ${isToday ? "text-brand-orange" : "text-gray-700"}`}
               >
                 {row.day}
               </span>
-              <span
-                className={
-                  row.is_closed ? "text-gray-400" : "text-gray-600"
-                }
-              >
+              <span className={row.is_closed ? "text-gray-400" : "text-gray-600"}>
                 {formatHoursRange(row)}
               </span>
             </li>
@@ -101,7 +100,11 @@ export default function OpeningHoursTable({
                       : "bg-gray-50"
                 }`}
               >
-                <td className="px-4 py-3 font-semibold text-brand-dark sm:px-5 sm:py-3.5">
+                <td
+                  className={`px-4 py-3 font-semibold sm:px-5 sm:py-3.5 ${
+                    isToday ? "text-brand-orange" : "text-brand-dark"
+                  }`}
+                >
                   {row.day}
                 </td>
                 <td
