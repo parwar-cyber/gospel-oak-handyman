@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+@layer base {
+  body {
+    @apply bg-white text-brand-dark antialiased;
+  }
+}
+
+@layer utilities {
+  .focus-ring {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2;
+  }
+}
