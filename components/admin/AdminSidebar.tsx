@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Inbox, Clock, LogOut } from "lucide-react";
+import { LayoutDashboard, Inbox, Clock, LockKeyhole, LogOut } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 
 const NAV_ITEMS = [
@@ -25,6 +25,12 @@ const NAV_ITEMS = [
     label: "Opening Hours",
     icon: Clock,
     isActive: (pathname: string) => pathname.startsWith("/admin/hours"),
+  },
+  {
+    href: "/admin/password",
+    label: "Change Password",
+    icon: LockKeyhole,
+    isActive: (pathname: string) => pathname.startsWith("/admin/password"),
   },
 ];
 
