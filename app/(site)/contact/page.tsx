@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import ContactForm from "@/components/ContactForm";
 import SocialLinks from "@/components/SocialLinks";
-import { CONTACT_INFO, OPENING_HOURS } from "@/lib/data";
+import { CONTACT_INFO } from "@/lib/data";
+import OpeningHoursTable from "@/components/OpeningHoursTable";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -99,13 +100,9 @@ export default function ContactPage() {
                   <p className="text-sm font-semibold text-brand-dark">
                     Opening Hours
                   </p>
-                  <ul className="mt-1 space-y-1 text-sm text-gray-600">
-                    {OPENING_HOURS.map((row) => (
-                      <li key={row.days}>
-                        {row.days}: {row.hours}
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="mt-2">
+                    <OpeningHoursTable variant="list" />
+                  </div>
                 </div>
               </div>
             </div>

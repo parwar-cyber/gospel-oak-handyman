@@ -79,19 +79,13 @@ export const SERVICE_OPTIONS = [
 ];
 
 export const CONTACT_INFO = {
-  address: "115 Mansfield Road, London NW3 2JL",
+  address: "Mansfield Road, London NW3 2JL",
   phone: "+44 7784 010417",
   phoneHref: "tel:+447784010417",
   email: "gospeloakhandyman@gmail.com",
   emailHref: "mailto:gospeloakhandyman@gmail.com",
   googleReviewsUrl: "https://share.google/GqnP27SpaUj6SAQsS",
 };
-
-export const OPENING_HOURS = [
-  { days: "Monday – Friday", hours: "8:00 AM – 5:00 PM" },
-  { days: "Saturday", hours: "9:00 AM – 5:00 PM" },
-  { days: "Sunday", hours: "Closed" },
-];
 
 export const REVIEWS = [
   {

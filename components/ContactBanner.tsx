@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { MapPin, Phone, Mail, Clock } from "lucide-react";
-import { CONTACT_INFO, OPENING_HOURS } from "@/lib/data";
+import { MapPin, Phone, Mail } from "lucide-react";
+import { CONTACT_INFO } from "@/lib/data";
+import OpeningHoursTable from "@/components/OpeningHoursTable";
 
 interface ContactBannerProps {
   showCta?: boolean;
@@ -15,24 +16,8 @@ export default function ContactBanner({ showCta = true }: ContactBannerProps) {
             <h2 className="text-xl font-bold text-brand-dark sm:text-2xl">
               Opening Hours
             </h2>
-            <div className="mt-4 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-card sm:mt-6">
-              <table className="w-full text-sm">
-                <tbody>
-                  {OPENING_HOURS.map((row, i) => (
-                    <tr
-                      key={row.days}
-                      className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}
-                    >
-                      <td className="px-4 py-3 font-semibold text-brand-dark sm:px-5 sm:py-3.5">
-                        {row.days}
-                      </td>
-                      <td className="px-4 py-3 text-gray-600 sm:px-5 sm:py-3.5">
-                        {row.hours}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="mt-4 sm:mt-6">
+              <OpeningHoursTable />
             </div>
           </div>
 
@@ -73,15 +58,6 @@ export default function ContactBanner({ showCta = true }: ContactBannerProps) {
                 >
                   {CONTACT_INFO.email}
                 </a>
-              </li>
-              <li className="flex items-center gap-3 rounded-xl bg-white p-4 shadow-card">
-                <Clock
-                  className="h-5 w-5 shrink-0 text-brand-orange"
-                  aria-hidden="true"
-                />
-                <span className="text-sm text-gray-700">
-                  Mon–Fri 8am–5pm, Sat 9am–5pm
-                </span>
               </li>
             </ul>
 

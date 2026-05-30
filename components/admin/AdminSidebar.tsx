@@ -2,12 +2,30 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Inbox, LogOut } from "lucide-react";
+import { LayoutDashboard, Inbox, Clock, LogOut } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 
 const NAV_ITEMS = [
-  { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/dashboard", label: "Requests", icon: Inbox },
+  {
+    href: "/admin/dashboard",
+    label: "Dashboard",
+    icon: LayoutDashboard,
+    isActive: (pathname: string) => pathname === "/admin/dashboard",
+  },
+  {
+    href: "/admin/dashboard",
+    label: "Requests",
+    icon: Inbox,
+    isActive: (pathname: string) =>
+      pathname.startsWith("/admin/dashboard") ||
+      pathname.startsWith("/admin/requests"),
+  },
+  {
+    href: "/admin/hours",
+    label: "Opening Hours",
+    icon: Clock,
+    isActive: (pathname: string) => pathname.startsWith("/admin/hours"),
+  },
 ];
 
 interface AdminSidebarProps {
@@ -46,18 +64,18 @@ export default function AdminSidebar({
       <nav className="flex-1 px-3 py-4" aria-label="Admin navigation">
         <ul className="space-y-1">
           {NAV_ITEMS.map((item) => {
-            const isActive = pathname.startsWith(item.href);
+            const active = item.isActive(pathname);
             return (
               <li key={item.label}>
                 <Link
                   href={item.href}
                   onClick={handleNavClick}
                   className={`flex min-h-[44px] items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors focus-ring ${
-                    isActive
+                    active
                       ? "bg-orange-50 text-brand-orange"
                       : "text-gray-600 hover:bg-gray-50 hover:text-brand-dark"
                   }`}
-                  aria-current={isActive ? "page" : undefined}
+                  aria-current={active ? "page" : undefined}
                 >
                   <item.icon className="h-4 w-4 shrink-0" aria-hidden="true" />
                   {item.label}
