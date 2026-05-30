@@ -2,71 +2,87 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { createClient } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import { SERVICE_OPTIONS } from "@/lib/data";
 
 export default function ContactForm() {
   const searchParams = useSearchParams();
   const prefillService = searchParams.get("service") || "";
 
-  const [form, setForm] = useState({
+  const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     service: prefillService,
     message: "",
   });
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
-    "idle"
-  );
-  const [errorMessage, setErrorMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus("loading");
-    setErrorMessage("");
-
-    const supabase = createClient();
-
-    const { error } = await supabase.from("contact_requests").insert({
-      name: form.name,
-      email: form.email,
-      phone: form.phone || null,
-      service: form.service,
-      message: form.message,
-    });
-
-    if (error) {
-      setStatus("error");
-      setErrorMessage(
-        "Something went wrong submitting your request. Please try again or call us directly."
-      );
-      return;
-    }
+    setIsSubmitting(true);
+    setError("");
 
     try {
-      await fetch("/api/send-notification", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-    } catch {
-      // Form saved to DB even if email fails
-    }
+      const { error: insertError } = await supabase
+        .from("contact_requests")
+        .insert([
+          {
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone || null,
+            service: formData.service,
+            message: formData.message,
+          },
+        ]);
 
-    setStatus("success");
-    setForm({ name: "", email: "", phone: "", service: "", message: "" });
+      if (insertError) {
+        console.error("Supabase insert error:", insertError);
+        setError(
+          "Something went wrong submitting your request. Please try again or call us directly."
+        );
+        return;
+      }
+
+      try {
+        await fetch("/api/send-notification", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        });
+      } catch (emailErr) {
+        console.error("Email notification failed (non-blocking):", emailErr);
+      }
+
+      setIsSubmitted(true);
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        service: "",
+        message: "",
+      });
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      setError(
+        "Something went wrong submitting your request. Please try again or call us directly."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  if (status === "success") {
+  if (isSubmitted) {
     return (
       <div
         className="rounded-2xl border border-green-200 bg-green-50 p-8 text-center"
@@ -77,7 +93,7 @@ export default function ContactForm() {
         </p>
         <button
           type="button"
-          onClick={() => setStatus("idle")}
+          onClick={() => setIsSubmitted(false)}
           className="mt-4 text-sm font-semibold text-brand-orange hover:underline focus-ring rounded"
         >
           Send another request
@@ -97,7 +113,7 @@ export default function ContactForm() {
           id="name"
           name="name"
           required
-          value={form.name}
+          value={formData.name}
           onChange={handleChange}
           className="w-full min-h-[44px] rounded-lg border border-gray-200 px-4 py-3 text-sm transition-colors focus:border-brand-orange focus:outline-none focus:ring-2 focus:ring-brand-orange/20"
           placeholder="Your full name"
@@ -113,7 +129,7 @@ export default function ContactForm() {
           id="email"
           name="email"
           required
-          value={form.email}
+          value={formData.email}
           onChange={handleChange}
           className="w-full min-h-[44px] rounded-lg border border-gray-200 px-4 py-3 text-sm transition-colors focus:border-brand-orange focus:outline-none focus:ring-2 focus:ring-brand-orange/20"
           placeholder="you@example.com"
@@ -128,7 +144,7 @@ export default function ContactForm() {
           type="tel"
           id="phone"
           name="phone"
-          value={form.phone}
+          value={formData.phone}
           onChange={handleChange}
           className="w-full min-h-[44px] rounded-lg border border-gray-200 px-4 py-3 text-sm transition-colors focus:border-brand-orange focus:outline-none focus:ring-2 focus:ring-brand-orange/20"
           placeholder="+44 7XXX XXXXXX"
@@ -143,7 +159,7 @@ export default function ContactForm() {
           id="service"
           name="service"
           required
-          value={form.service}
+          value={formData.service}
           onChange={handleChange}
           className="w-full min-h-[44px] rounded-lg border border-gray-200 px-4 py-3 text-sm transition-colors focus:border-brand-orange focus:outline-none focus:ring-2 focus:ring-brand-orange/20"
         >
@@ -166,25 +182,28 @@ export default function ContactForm() {
           name="message"
           required
           rows={5}
-          value={form.message}
+          value={formData.message}
           onChange={handleChange}
           className="w-full min-h-[44px] rounded-lg border border-gray-200 px-4 py-3 text-sm transition-colors focus:border-brand-orange focus:outline-none focus:ring-2 focus:ring-brand-orange/20"
           placeholder="Describe the job you need help with..."
         />
       </div>
 
-      {status === "error" && (
-        <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
-          {errorMessage}
+      {error && (
+        <p
+          className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700"
+          role="alert"
+        >
+          {error}
         </p>
       )}
 
       <button
         type="submit"
-        disabled={status === "loading"}
+        disabled={isSubmitting}
         className="w-full min-h-[44px] rounded-lg bg-brand-orange px-6 py-3.5 text-base font-bold text-white transition-all hover:bg-orange-600 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60 focus-ring"
       >
-        {status === "loading" ? "Sending..." : "Send Request"}
+        {isSubmitting ? "Sending..." : "Send Request"}
       </button>
     </form>
   );

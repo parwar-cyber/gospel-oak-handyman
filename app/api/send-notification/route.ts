@@ -1,94 +1,45 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
-interface NotificationPayload {
-  name: string;
-  email: string;
-  phone?: string;
-  service: string;
-  message: string;
-}
-
-export async function POST(request: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const body: NotificationPayload = await request.json();
+    const body = await req.json();
     const { name, email, phone, service, message } = body;
 
-    if (!name || !email || !service || !message) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
+    if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+      console.error("Gmail env vars missing");
+      return NextResponse.json({ error: "Email config missing" }, { status: 500 });
     }
-
-    const gmailUser = process.env.GMAIL_USER;
-    const gmailPassword = process.env.GMAIL_APP_PASSWORD;
-
-    if (!gmailUser || !gmailPassword) {
-      console.warn("Email credentials not configured — skipping notification");
-      return NextResponse.json({ success: true, emailSent: false });
-    }
-
-    const timestamp = new Date().toLocaleString("en-GB", {
-      timeZone: "Europe/London",
-    });
-
-    const siteUrl =
-      process.env.NEXT_PUBLIC_SITE_URL ||
-      (process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}`
-        : "http://localhost:3000");
-
-    const subject = `New Job Request — ${name} — ${service}`;
-
-    const plainText = `New request received on the Gospel Oak Handyman website.
-
-Name: ${name}
-Email: ${email}
-Phone: ${phone || "Not provided"}
-Service: ${service}
-Message: ${message}
-Submitted: ${timestamp}
-
-View all requests in admin: ${siteUrl}/admin`;
-
-    const html = `
-      <h2>New Job Request</h2>
-      <p>New request received on the Gospel Oak Handyman website.</p>
-      <table style="border-collapse: collapse; width: 100%; max-width: 600px;">
-        <tr><td style="padding: 8px; font-weight: bold;">Name</td><td style="padding: 8px;">${name}</td></tr>
-        <tr><td style="padding: 8px; font-weight: bold;">Email</td><td style="padding: 8px;"><a href="mailto:${email}">${email}</a></td></tr>
-        <tr><td style="padding: 8px; font-weight: bold;">Phone</td><td style="padding: 8px;">${phone || "Not provided"}</td></tr>
-        <tr><td style="padding: 8px; font-weight: bold;">Service</td><td style="padding: 8px;">${service}</td></tr>
-        <tr><td style="padding: 8px; font-weight: bold;">Message</td><td style="padding: 8px;">${message}</td></tr>
-        <tr><td style="padding: 8px; font-weight: bold;">Submitted</td><td style="padding: 8px;">${timestamp}</td></tr>
-      </table>
-      <p><a href="${siteUrl}/admin">View all requests in admin</a></p>
-    `;
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: gmailUser,
-        pass: gmailPassword,
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_APP_PASSWORD,
       },
     });
 
     await transporter.sendMail({
-      from: gmailUser,
-      to: gmailUser,
+      from: process.env.GMAIL_USER,
+      to: process.env.GMAIL_USER,
       replyTo: email,
-      subject,
-      text: plainText,
-      html,
+      subject: `New Job Request — ${name} — ${service}`,
+      html: `
+        <h2>New Request via Gospel Oak Handyman Website</h2>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Phone:</strong> ${phone || "Not provided"}</p>
+        <p><strong>Service:</strong> ${service}</p>
+        <p><strong>Message:</strong></p>
+        <p>${message}</p>
+        <hr/>
+        <p>View all requests: https://gospel-oak-handyman.vercel.app/admin/dashboard</p>
+      `,
     });
 
-    return NextResponse.json({ success: true, emailSent: true });
-  } catch (error) {
-    console.error("Email notification error:", error);
-    return NextResponse.json(
-      { error: "Failed to send notification" },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("Email send error:", err);
+    return NextResponse.json({ error: "Failed to send email" }, { status: 500 });
   }
 }
