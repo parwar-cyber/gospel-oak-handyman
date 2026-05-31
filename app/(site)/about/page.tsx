@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
 import ContactBanner from "@/components/ContactBanner";
-import { SERVICES } from "@/lib/data";
+import { SERVICES, SERVICE_COLOR_CLASSES } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "About",
@@ -59,16 +59,27 @@ export default function AboutPage() {
             <h2 className="text-xl font-bold text-brand-dark sm:text-2xl">
               Services We Offer
             </h2>
-            <ul className="mt-4 grid gap-2 sm:grid-cols-2">
-              {SERVICES.map((service) => (
-                <li
-                  key={service.id}
-                  className="flex items-center gap-2 text-sm text-gray-700"
-                >
-                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand-orange" />
-                  {service.title}
-                </li>
-              ))}
+            <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+              {SERVICES.map((service) => {
+                const Icon = service.icon;
+                const colors = SERVICE_COLOR_CLASSES[service.color];
+                return (
+                  <li
+                    key={service.id}
+                    className="flex items-center gap-3 rounded-lg border border-gray-100 bg-white p-3 shadow-card"
+                  >
+                    <div className={`rounded-lg p-2 ${colors.bg}`}>
+                      <Icon
+                        className={`h-4 w-4 ${colors.icon}`}
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <span className="text-sm font-semibold text-gray-700">
+                      {service.title}
+                    </span>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 

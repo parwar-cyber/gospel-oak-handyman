@@ -6,7 +6,7 @@ import { SERVICES } from "@/lib/data";
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Handyman services in Camden & Gospel Oak — general repairs, property maintenance, electrical, plumbing, painting, and bespoke carpentry.",
+    "Handyman services in Camden & Gospel Oak — general repairs, property maintenance, electrical, plumbing, painting, and carpentry.",
 };
 
 export default function ServicesPage() {
@@ -18,8 +18,8 @@ export default function ServicesPage() {
             Our Services
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-base text-gray-300 sm:text-lg">
-            From small repairs to bespoke carpentry — we handle it all with
-            care and attention to detail.
+            From everyday repairs to carpentry and decorating — we handle it all
+            with care and attention to detail.
           </p>
         </div>
       </section>

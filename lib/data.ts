@@ -1,80 +1,135 @@
 import {
   Wrench,
-  Hammer,
-  Lightbulb,
+  Home,
+  Zap,
   Droplets,
   Paintbrush,
-  Ruler,
+  Hammer,
   type LucideIcon,
 } from "lucide-react";
+
+export type ServiceColor = "red" | "orange" | "purple" | "green";
 
 export interface Service {
   id: string;
   title: string;
-  shortDescription: string;
-  fullDescription: string;
+  color: ServiceColor;
   icon: LucideIcon;
+  items: string[];
 }
+
+export const SERVICE_COLOR_CLASSES: Record<
+  ServiceColor,
+  { border: string; icon: string; bg: string }
+> = {
+  red: {
+    border: "border-l-red-500",
+    icon: "text-red-500",
+    bg: "bg-red-50",
+  },
+  orange: {
+    border: "border-l-orange-500",
+    icon: "text-brand-orange",
+    bg: "bg-orange-50",
+  },
+  purple: {
+    border: "border-l-purple-500",
+    icon: "text-purple-500",
+    bg: "bg-purple-50",
+  },
+  green: {
+    border: "border-l-green-500",
+    icon: "text-green-500",
+    bg: "bg-green-50",
+  },
+};
 
 export const SERVICES: Service[] = [
   {
     id: "general-repairs",
     title: "General Repairs",
-    shortDescription:
-      "Fixing taps, toilets, cupboards, fixtures & fittings",
-    fullDescription:
-      "From dripping taps and running toilets to loose cupboard doors and faulty fixtures — we handle the everyday repairs that keep your home running smoothly. No job is too small.",
+    color: "red",
     icon: Wrench,
+    items: [
+      "Wall mount TV",
+      "Assemble furniture",
+      "Hanging pictures & shelves",
+      "Sash window repairs",
+    ],
   },
   {
     id: "property-maintenance",
     title: "Property Maintenance",
-    shortDescription:
-      "Shelves, furniture assembly, picture hanging, door repairs",
-    fullDescription:
-      "Keep your property in top condition with our maintenance services. We assemble flat-pack furniture, install shelves, hang pictures and mirrors, repair doors, and tackle all those odd jobs on your list.",
-    icon: Hammer,
+    color: "orange",
+    icon: Home,
+    items: [
+      "Repairing doors",
+      "Fitting new locks & hinges",
+      "Silicone around shower & baths",
+      "Fitting new bath screens",
+      "Tiling and grouting",
+    ],
   },
   {
     id: "electrical-maintenance",
     title: "Electrical Maintenance",
-    shortDescription:
-      "Light fixtures, dimmer switches (small-scale, non-certified)",
-    fullDescription:
-      "Small-scale electrical maintenance including replacing light fixtures, installing dimmer switches, changing bulbs in hard-to-reach places, and fixing faulty switches. Note: we are not certified electricians — for major electrical work, we recommend a qualified electrician.",
-    icon: Lightbulb,
+    color: "purple",
+    icon: Zap,
+    items: [
+      "Changing lightbulbs",
+      "Replacing light switch sockets",
+      "Changing ceiling lights",
+      "Fitting new appliances",
+      "Small scale non-certified Electrician",
+    ],
   },
   {
     id: "plumbing-maintenance",
     title: "Plumbing Maintenance",
-    shortDescription:
-      "Minor leaks, showerheads, small-scale plumbing repairs",
-    fullDescription:
-      "We fix minor leaks, replace showerheads, repair dripping taps, unblock simple drain issues, and handle small-scale plumbing repairs. For major plumbing work, we can recommend trusted local plumbers.",
+    color: "green",
     icon: Droplets,
+    items: [
+      "Replacing taps & mixers",
+      "Fitting sinks & washing hand units",
+      "Unblocking drains",
+      "Guttering",
+      "Small scale non-certified Plumber",
+    ],
   },
   {
     id: "painting-decorating",
     title: "Painting & Decorating",
-    shortDescription:
-      "Interior painting, patch painting, plaster & drywall repair",
-    fullDescription:
-      "Transform your space with our painting and decorating services. Interior painting, patch painting, plaster repair, drywall patching, and touch-ups to keep your walls looking fresh and professional.",
+    color: "red",
     icon: Paintbrush,
+    items: [
+      "Interior and exterior decorating",
+      "Woodwork and walls",
+      "Drywall repair",
+    ],
   },
   {
-    id: "carpentry-bespoke",
-    title: "Carpentry & Bespoke",
-    shortDescription:
-      "Custom carpentry, bathroom carpentry, bespoke fittings",
-    fullDescription:
-      "Custom carpentry solutions tailored to your home. From bespoke bathroom carpentry and shelving to custom fittings and trim work — we create beautiful, functional solutions built to last.",
-    icon: Ruler,
+    id: "carpentry",
+    title: "Carpentry",
+    color: "orange",
+    icon: Hammer,
+    items: [
+      "Custom carpentry",
+      "Building shelves",
+      "Decking",
+      "Fitting new sheds",
+      "Fitting fence & trellis",
+      "Laminate flooring",
+    ],
   },
 ];
 
 export const SERVICE_OPTIONS = [
-  ...SERVICES.map((s) => s.title),
+  "General Repairs",
+  "Property Maintenance",
+  "Electrical Maintenance",
+  "Plumbing Maintenance",
+  "Painting & Decorating",
+  "Carpentry",
   "Other",
 ];
 
